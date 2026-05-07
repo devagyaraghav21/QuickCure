@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { Icons } from 'react-toastify'
 import { assets } from '../assets/assets'
-import RelatedDoctors from '../components/relateddoctors'
+import RelatedDoctors from '../components/RelatedDoctors'
 const Appointment = () => {
 
   const {docId}= useParams()

@@ -13,7 +13,7 @@ const AddDoctor = () => {
     const [experience, setExperience] = useState('1 Year')
     const [fees, setFees] = useState('')
     const [about, setAbout] = useState('')
-    const [speciality, setSpeciality] = useState('General physician')
+    const [speciality, setSpeciality] = useState('General Physician')
     const [degree, setDegree] = useState('')
     const [address1, setAddress1] = useState('')
     const [address2, setAddress2] = useState('')
@@ -25,107 +25,119 @@ const AddDoctor = () => {
 
 
 
-        const doctorData = {
-            name,
-            email,
-            password,
-            experience,
-            fees: Number(fees),
-            about,
-            speciality,
-            degree,
-            address: {
-                line1: address1,
-                line2: address2
-            }
-        }
+//         const doctorData = {
+//             name,
+//             email,
+//             password,
+//             experience,
+//             fees: Number(fees),
+//             about,
+//             speciality,
+//             degree,
+//             address: {
+//                 line1: address1,
+//                 line2: address2
+//             }
+//         }
 
-        console.log(doctorData)
+//         console.log(doctorData)
+
+//         try {
+//   const { data } = await axios.post(
+//     backendUrl + '/api/admin/add-doctor',
+//     doctorData,
+//     {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         aToken
+//       }
+//     }
+//   )
+
+  
+
+
+// if (data.success) {
+//     toast.success(data.message)
+
+//     //  RESET FORM HERE
+//     setDocImg(false)
+//     setName('')
+//     setEmail('')
+//     setPassword('')
+//     setExperience('1 Year')
+//     setFees('')
+//     setAbout('')
+//     setSpeciality('General Physician')
+//     setDegree('')
+//     setAddress1('')
+//     setAddress2('')
+
+// } else {
+//     toast.error(data.message)
+// }
+
+// } catch (error) {
+//   console.log(error)
+
+//   if (error.response && error.response.data.message) {
+//     toast.error(error.response.data.message)  //  BACKEND ERROR MESSAGE
+//   } else {
+//     toast.error("Something went wrong")
+//   }
+// }
+
+       
+
+
+        //   console.log("FORM SUBMITTED ")
 
         try {
-  const { data } = await axios.post(
-    backendUrl + '/api/admin/add-doctor',
-    doctorData,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        aToken
-      }
-    }
-  )
+            if(!docImg) {
+                return toast.error('Image Not Selected')
+            }
 
-  if (data.success) {
-    toast.success(data.message)
-  } else {
-    toast.error(data.message)  // 👈 duplicate error will show here
-  }
+          const formData = new FormData()
 
-} catch (error) {
-  console.log(error)
-
-  if (error.response && error.response.data.message) {
-    toast.error(error.response.data.message)  // 👈 BACKEND ERROR MESSAGE
-  } else {
-    toast.error("Something went wrong")
-  }
-}
-
-        if (data.success) {
-            toast.success(data.message)
-        } else {
-            toast.error(data.message)
-        }
-
-
-
-        //   console.log("FORM SUBMITTED 🔥")
-
-        // try {
-        //     if(!docImg) {
-        //         return toast.error('Image Not Selected')
-        //     }
-
-        //   const formData = new FormData()
-
-        //   formData.append('file',docImg)
-        //   formData.append('name',name)
-        //   formData.append('email',email)
-        //   formData.append('password',password)
-        //   formData.append('experience',experience)
-        //   formData.append('fees',Number(fees))
-        //   formData.append('about',about)
-        //   formData.append('speciality',speciality)
-        //   formData.append('degree',degree)
-        //   formData.append('address',JSON.stringify({line1:address1,line2:address2}))
+          formData.append('image',docImg)
+          formData.append('name',name)
+          formData.append('email',email)
+          formData.append('password',password)
+          formData.append('experience',experience)
+          formData.append('fees',Number(fees))
+          formData.append('about',about)
+          formData.append('speciality',speciality)
+          formData.append('degree',degree)
+          formData.append('address',JSON.stringify({line1:address1,line2:address2}))
 
         //CONSOLE LOG FORMDATA
-        //   formData.forEach((value,key)=>{
-        //     console.log(`${key} : ${value}`);
-        //   })
-        //       const {data} = await axios.post(backendUrl + '/api/admin/add-doctor',formData,{ headers: { aToken }})
-        //       console.log("Backend URL:", backendUrl)
-        //       if (data.success) {
-        //         toast.success(data.message)
+          formData.forEach((value,key)=>{
+            console.log(`${key} : ${value}`);
+          })
+              const {data} = await axios.post(backendUrl + '/api/admin/add-doctor',formData,{ headers: { aToken }})
+              console.log("Backend URL:", backendUrl)
+              if (data.success) {
+                toast.success(data.message)
 
 
-        //      setDocImg(false)
-        //      setName('')
-        //      setPassword('')
-        //      setEmail('')
-        //      setAddress1('')
-        //      setASddress2('')
-        //      setDegree('')
-        //      setAbout('')
-        //      setFees('')
+             setDocImg(false)
+             setName('')
+             setPassword('')
+             setEmail('')
+             setAddress1('')
+             setAddress2('')
+             setDegree('')
+             setAbout('')
+             setFees('')
 
-        //       }else {
-        //         toast.error(data.message)
-        //       }
+              }else {
+                toast.error(data.message)
+              }
 
-        //     }catch (error){
-        //     toast.error(data.message)
-        //     console.log(error)   
-        //     }
+            }catch (error){
+            toast.error(data.message)
+            console.log(error)   
+            }
 
     }
 

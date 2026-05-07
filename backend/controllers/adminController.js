@@ -1,5 +1,5 @@
 import validator from "validator"
-// import cloudinary from "../config/cloudinary.js"
+import cloudinary from "../config/cloudinary.js"
 import bcrypt from 'bcrypt'
 import doctorModel from "../models/doctorModel.js"
 
@@ -9,16 +9,30 @@ import jwt from 'jsonwebtoken'
 const addDoctor = async (req, res) => {
 
     try {
-        const { name, email, password, speciality, degree, experience, about, fees, address } = req.body
+        const { name, email, password, speciality, degree, experience, about, fees } = req.body
 
-        // const imageFile = req.file
+        const imageFile = req.file
 
-       
+        let address
+        try {
+            address = JSON.parse(req.body.address)
+        } catch (error) {
+            return res.json({ success: false, message: "Invalid address format" })
+        }
+
+        console.log("BODY:", req.body)
+        console.log("PARSED ADDRESS:", address)
+        console.log("FILE:", req.file)
         // console.log({name, email, password, speciality, degree, experience, about, fees, address },imageFile);
 
         // checking for all data to add doctor if any missing details it will return the message
-        if (!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address) {
+        if (!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address?.line1 || !address?.line2) {
             return res.json({ success: false, message: "Missing Details" })
+        }
+
+        // check image
+        if (!imageFile) {
+            return res.json({ success: false, message: "Image not uploaded" })
         }
 
         // validating email format
@@ -37,12 +51,13 @@ const addDoctor = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt)
 
         // upload image to cloudinary
+
         // console.log("CLOUD:", process.env.CLOUDINARY_CLOUD_NAME)
         // console.log("KEY:", process.env.CLOUDINARY_API_KEY)
         // console.log("SECRET:", process.env.CLOUDINARY_API_SECRET)
 
-        // const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
-        // const imageUrl = imageUpload.secure_url
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
+        const imageUrl = imageUpload.secure_url
 
         // to save these data into data base
 
@@ -50,7 +65,7 @@ const addDoctor = async (req, res) => {
 
             name,
             email,
-            // image: imageUrl,
+            image: imageUrl,
             password: hashedPassword,
             speciality,
             degree,
@@ -60,7 +75,7 @@ const addDoctor = async (req, res) => {
             address: address,
             date: Date.now()
         }
-        
+
         const newDoctor = new doctorModel(doctorData)
         await newDoctor.save()
         res.json({ success: true, message: "Doctor Added" })
@@ -74,25 +89,38 @@ const addDoctor = async (req, res) => {
 
 // API FOR ADMIN LOGIN
 
-const loginAdmin = async(req,res) => {
-    try{
+const loginAdmin = async (req, res) => {
+    try {
 
-        const {email,password} =req.body
-        if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+        const { email, password } = req.body
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
 
-            const token = jwt.sign(email+password,process.env.jwt_secret)
-            res.json({success:true,token})
+            const token = jwt.sign(email + password, process.env.JWT_SECRET)
+            res.json({ success: true, token })
 
-        } else{
-            res.json({succcess:false,message:"invalid credentials"})
+        } else {
+            res.json({ success: false, message: "invalid credentials" })
         }
 
     } catch (error) {
         console.log(error)
-        res.json({succcess:false,message:error.message})
+        res.json({ succcess: false, message: error.message })
     }
 
-}   
+}
 
+// API to get all doctors list for admin panel
 
-export { addDoctor, loginAdmin }
+const allDoctors = async (req, res) => {
+    try {
+        const doctors = await doctorModel.find({}).select('-password')
+        res.json({ success: true, doctors })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ succcess: false, message: error.message })
+    }
+
+}
+
+export { addDoctor, loginAdmin, allDoctors }
