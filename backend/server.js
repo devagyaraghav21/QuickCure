@@ -46,4 +46,11 @@ app.get('/',(req,res)=>{
 res.send('API WORKING')
 })
 
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        message: "Backend is healthy"
+    });
+});
+
 app.listen(port, ()=> console.log("Server Started",port))

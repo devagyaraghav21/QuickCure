@@ -20,8 +20,11 @@ if (aToken) {
   {
     doctors.map((item,index)=>(
       <div className='border border-indigo-200 rounded-xl max-w-56 overflow-hidden cursor-pointer group-[]:' key={index}>
-        <img className='bg-indigo-50 group-hover:bg-primary transition-all duration-500' src={assets.mypic_icon}  alt="" />
-        <div className='p-4' >
+<img
+  className='bg-indigo-50 group-hover:bg-primary transition-all duration-500'
+  src={item.image}
+  alt={item.name}
+/>        <div className='p-4' >
           <p className='text-neutral-800 text-lg font-medium'>{item.name}</p>
           <p className='text-zinc-600 text-sm'>{item.speciality}</p>
           <div className='mt-2 flex items-center gap-1 text-sm'>
@@ -32,7 +35,7 @@ if (aToken) {
       </div>
     ))
   }
-</div>
+</div>3
     </div>
   )
 }
