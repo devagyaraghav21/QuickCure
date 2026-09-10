@@ -9,17 +9,89 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+
+  build-and-test:
+
     runs-on: ubuntu-latest
 
     steps:
 
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v6
 
+
+      # 2. Setup Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+
+      # 3. Build Docker images
       - name: Build Docker Compose services
         run: docker compose build
+
+
+      # 4. Start application
+      - name: Start QuickCure
+        run: docker compose up -d
+
+
+      # 5. Show running containers
+      - name: Check running containers
+        run: docker compose ps
+
+
+      # 6. Wait for application
+      - name: Wait for QuickCure
+        run: |
+          echo "Waiting for QuickCure to start..."
+
+          for i in {1..30}; do
+            if curl -f http://localhost/ > /dev/null 2>&1; then
+              echo "QuickCure is responding!"
+              exit 0
+            fi
+
+            echo "Waiting... attempt $i/30"
+            sleep 2
+          done
+
+          echo "QuickCure did not start."
+          docker compose logs
+          exit 1
+
+
+      # 7. Test frontend
+      - name: Test frontend
+        run: |
+          echo "Testing frontend..."
+
+          curl -f http://localhost/
+
+          echo "Frontend test passed!"
+
+
+      # 8. Test backend
+      - name: Test backend
+        run: |
+          echo "Testing backend..."
+
+          curl -f http://localhost/api/
+
+          echo "Backend test passed!"
+
+
+      # 9. Show logs if something failed
+      - name: Show container logs
+        if: failure()
+        run: docker compose logs
+
+
+      # 10. Stop containers
+      - name: Stop QuickCure
+        if: always()
+        run: docker compose down
