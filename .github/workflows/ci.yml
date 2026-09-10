@@ -38,7 +38,18 @@ jobs:
       # 4. Start application
       - name: Start QuickCure
         run: docker compose up -d
-
+      - name: Create backend .env
+        run: |
+          cat > backend/.env << EOF
+          PORT=4000
+          MONGODB_URI=${{ secrets.MONGODB_URI }}
+          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          RAZORPAY_KEY_ID=${{ secrets.RAZORPAY_KEY_ID }}
+          RAZORPAY_KEY_SECRET=${{ secrets.RAZORPAY_KEY_SECRET }}
+          EOF
 
       # 5. Show running containers
       - name: Check running containers
