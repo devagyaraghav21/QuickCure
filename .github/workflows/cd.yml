@@ -68,7 +68,7 @@ jobs:
 
           script: |
 
-            cd ~/QuickCure
+            cd ~/QuickCure 
 
             echo "Pulling latest Docker images..."
 
