@@ -29,12 +29,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-
-      # 3. Build Docker images
-      - name: Build Docker Compose services
-        run: docker compose build
-
-
       # 4. Start application
       - name: Start QuickCure
         run: docker compose up -d
@@ -50,6 +44,10 @@ jobs:
           RAZORPAY_KEY_ID=${{ secrets.RAZORPAY_KEY_ID }}
           RAZORPAY_KEY_SECRET=${{ secrets.RAZORPAY_KEY_SECRET }}
           EOF
+
+      # 3. Build Docker images
+      - name: Build Docker Compose services
+        run: docker compose build
 
       # 5. Show running containers
       - name: Check running containers
