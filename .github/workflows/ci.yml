@@ -100,7 +100,7 @@ jobs:
         run: |
           echo "Testing backend..."
 
-          curl -f http://localhost/api/
+          curl -f http://localhost/api/health
 
           echo "Backend test passed!"
 
