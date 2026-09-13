@@ -67,9 +67,12 @@ jobs:
 
           for i in {1..30}; do
 
-            if curl -f http://localhost/ > /dev/null 2>&1; then
-              echo "QuickCure is responding!"
+            if curl -f http://localhost/ > /dev/null 2>&1 && \
+               curl -f http://localhost/api/health > /dev/null 2>&1; then
+
+              echo "Frontend and Backend are ready!"
               exit 0
+
             fi
 
             echo "Waiting... attempt $i/30"
@@ -77,7 +80,7 @@ jobs:
 
           done
 
-          echo "QuickCure did not start."
+          echo "QuickCure did not become ready."
 
           docker compose ps
           docker compose logs
