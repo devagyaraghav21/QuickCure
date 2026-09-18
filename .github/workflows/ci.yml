@@ -68,7 +68,7 @@ jobs:
           for i in {1..30}; do
 
             if curl -f http://localhost/ > /dev/null 2>&1 && \
-               curl -f http://localhost/api/health > /dev/null 2>&1; then
+               curl -f http://localhost/health > /dev/null 2>&1; then
 
               echo "Frontend and Backend are ready!"
               exit 0
@@ -103,7 +103,7 @@ jobs:
         run: |
           echo "Testing backend..."
 
-          curl -f http://localhost/api/health
+          curl -f http://localhost/health
 
           echo "Backend test passed!"
 
