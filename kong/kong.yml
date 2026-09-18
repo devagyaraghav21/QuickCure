@@ -1,0 +1,55 @@
+_format_version: "3.0"
+
+services:
+
+  # =========================
+  # BACKEND API
+  # =========================
+
+  - name: quickcure-backend
+    url: http://backend:4000
+
+    routes:
+
+      - name: quickcure-api
+        paths:
+          - /api
+        protocols:
+          - http
+        strip_path: false
+
+        plugins:
+
+          - name: rate-limiting
+            config:
+              minute: 100
+              policy: local
+
+
+      # =========================
+      # HEALTH CHECK
+      # =========================
+
+      - name: quickcure-health
+        paths:
+          - /health
+        protocols:
+          - http
+        strip_path: false
+
+
+  # =========================
+  # FRONTEND
+  # =========================
+
+  - name: quickcure-frontend
+    url: http://frontend:80
+
+    routes:
+
+      - name: quickcure-frontend
+        paths:
+          - /
+        protocols:
+          - http
+        strip_path: false
