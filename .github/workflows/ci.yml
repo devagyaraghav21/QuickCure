@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "VITE_BACKEND_URL=" > frontend/.env
   
+          
 
       # 3. Create backend .env
       - name: Create backend .env
