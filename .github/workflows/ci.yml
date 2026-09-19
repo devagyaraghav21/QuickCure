@@ -29,6 +29,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      # Create frontend .env
+      - name: Create frontend .env
+        run: |
+          echo "VITE_BACKEND_URL=" > frontend/.env
+  
 
       # 3. Create backend .env
       - name: Create backend .env
